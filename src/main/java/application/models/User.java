@@ -1,14 +1,17 @@
 package application.models;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "users")
@@ -21,7 +24,7 @@ public class User {
 	@Column(nullable = false, name = "first_name")
 	private String firstName;
 	
-	@Column(nullable = false, name = "last_name")
+	@Column(name = "last_name")
 	private String lastName;
 	
 	@Column(nullable = false)
@@ -30,13 +33,21 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 	
-	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
 	@Column(name = "created_at")
-	private Timestamp createdAt;
+	private Date createdAt;
 	
-	@DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
 	@Column(name = "updated_at")
-	private Timestamp updatedAt;
+	private Date updatedAt;
+	
+	@PrePersist
+	protected void onCreate() {
+		createdAt = new Date();
+	}
+	
+	@PreUpdate
+	protected void onUpdate(){
+		updatedAt = new Date();
+	}
 	
 	public Long getId() {
 		return id;
@@ -46,6 +57,8 @@ public class User {
 		this.id = id;
 	}
 
+	@NotEmpty
+	@Email
 	public String getEmail() {
 		return email;
 	}
@@ -54,6 +67,7 @@ public class User {
 		this.email = email;
 	}
 
+	@NotEmpty
 	public String getPassword() {
 		return password;
 	}
@@ -62,6 +76,7 @@ public class User {
 		this.password = password;
 	}
 
+	@NotEmpty
 	public String getFirstName() {
 		return firstName;
 	}
@@ -70,6 +85,7 @@ public class User {
 		this.firstName = firstName;
 	}
 
+	@NotEmpty
 	public String getLastName() {
 		return lastName;
 	}
@@ -78,19 +94,11 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public Timestamp getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(Timestamp updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public Timestamp getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
-	}
-
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
 	}
 }
